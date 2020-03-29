@@ -1,0 +1,14 @@
+{
+  "name": "stock-analysis",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "repository": "git@github.com:mselvan/stock-analysis.git",
+  "author": "Manimaran Selvan <mselvan@belyf.com>",
+  "license": "MIT",
+  "dependencies": {
+    "mongodb": "^3.5.5"
+  }
+}
