@@ -23,7 +23,7 @@ let initialize = START_OVER;
             initialize = true
         }
         if (START_OVER || initialize) {
-            await db.spy.deleteMany({});
+            if(docCount != 0) await db.spy.deleteMany({});
             const csvData = await csvtojson()
                 .fromFile("./data/SPY.csv")
                 .subscribe((jsonObj) => {
