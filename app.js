@@ -1,46 +1,51 @@
+const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
-const {MONGO_URL, OPTIONS, INITIALIZE} = require("./config");
-const {ObjectId} = require('mongodb');
-let {calculateAllMaxMin} = require("./processors/calculation-processor");
-var MongoClient = require('mongodb').MongoClient;
+const {MONGO_URL, DB_NAME, COLLECTION_NAME, OPTIONS, START_OVER} = require("./config");
+const {ObjectId, Timestamp, Decimal128, Long} = require('mongodb');
+const {calculateAllMaxMin} = require("./processors/calculation-processor");
+const csvtojson = require("csvtojson");
 
-const client = new MongoClient(MONGO_URL, OPTIONS);
+(async function () {
+    const client = new MongoClient(MONGO_URL, OPTIONS);
 
-client.connect(function(err, client) {
-  assert.equal(null, err);
-  console.log("Connected correctly to server");
-  const db = client.db("stockstore");
+    try {
+        await client.connect();
+        console.log("Connected correctly to server");
 
-  db.spy = db.collection("spy");
+        const db = client.db(DB_NAME);
+        db.spy = db.collection(COLLECTION_NAME);
 
-  if(INITIALIZE) {
-    db.spy.updateMany({}, [{
-      $set: {
-        "lastTradedDate": {$toDate: "$lastTradedDate"},
-        "open": {$toDecimal: "$open"},
-        "high": {$toDecimal: "$high"},
-        "low": {$toDecimal: "$low"},
-        "close": {$toDecimal: "$close"},
-        "adjClose": {$toDecimal: "$adjClose"},
-        "volume": {$toLong: "$volume"}
-      }
-    }]);
-  }
-
-  db.spy.find({}).sort({lastTradedDate: 1}).toArray(function(err, docs) {
-    assert.equal(null, err);
-    var updateDocs = calculateAllMaxMin(docs);
-    console.log(docs);
-    for(var i in updateDocs) {
-      var update = updateDocs[i];
-      console.log(update);
-      db.spy.updateOne({_id: ObjectId(update.id)}, [
-          {
-            $addFields: update.values
-          }
-      ], {upsert: false});
+        if (START_OVER) {
+            await db.spy.deleteMany({});
+            await csvtojson()
+                .fromFile("./data/SPY.csv")
+                .subscribe((jsonObj) => {
+                    delete jsonObj.adjClose;
+                    jsonObj.lastTradedDate = new Date(jsonObj.lastTradedDate);
+                    jsonObj.open = Decimal128.fromString(jsonObj.open);
+                    jsonObj.high = Decimal128.fromString(jsonObj.high);
+                    jsonObj.low = Decimal128.fromString(jsonObj.low);
+                    jsonObj.close = Decimal128.fromString(jsonObj.close);
+                    jsonObj.volume = Long.fromString(jsonObj.volume);
+                })
+                .then(csvData => {
+                    console.log(csvData);
+                    db.spy.insertMany(csvData);
+                });
+        }
+        let docs = await db.spy.find({}).sort({lastTradedDate: 1}).toArray();
+        let calculatedData = calculateAllMaxMin(docs);
+        for (toUpdate of calculatedData) {
+            // console.log(toUpdate);
+            await db.spy.updateOne({_id: ObjectId(toUpdate.id)}, [
+                {
+                    $addFields: toUpdate.values
+                }
+            ], {upsert: false});
+        }
+    } catch (err) {
+        console.log(err.stack);
     }
-  }, function (err, r) {
+    // Close connection
     client.close();
-  });
-});
+})();
