@@ -24,22 +24,23 @@ client.connect(function(err, client) {
         "adjClose": {$toDecimal: "$adjClose"},
         "volume": {$toLong: "$volume"}
       }
-    }], function(err, r) {
-      client.close();
-    });
+    }]);
   }
 
-  db.spy.find({}).sort({lastTradedDate: 1}).limit(5).toArray(function(err, docs) {
+  db.spy.find({}).sort({lastTradedDate: 1}).toArray(function(err, docs) {
     assert.equal(null, err);
     var updateDocs = calculateAllMaxMin(docs);
+    console.log(docs);
     for(var i in updateDocs) {
       var update = updateDocs[i];
       console.log(update);
-      db.spy.updateOne({_id: ObjectId(update.id)}, [{
+      db.spy.updateOne({_id: ObjectId(update.id)}, [
+          {
             $addFields: update.values
-          }], {upsert: false}, function (err, r) {
-        client.close();
-      });
+          }
+      ], {upsert: false});
     }
+  }, function (err, r) {
+    client.close();
   });
 });
