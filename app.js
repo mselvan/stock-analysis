@@ -9,12 +9,11 @@ const client = new MongoClient(MONGO_URL, OPTIONS);
 client.connect(function(err, client) {
   assert.equal(null, err);
   console.log("Connected correctly to server");
-
   const db = client.db("stockstore");
 
   db.spy = db.collection("spy");
 
-/*  if(INITIALIZE) {
+  if(INITIALIZE) {
     db.spy.updateMany({}, [{
       $set: {
         "lastTradedDate": {$toDate: "$lastTradedDate"},
@@ -28,7 +27,7 @@ client.connect(function(err, client) {
     }], function(err, r) {
       client.close();
     });
-  }*/
+  }
 
   db.spy.find({}).sort({lastTradedDate: 1}).limit(5).toArray(function(err, docs) {
     assert.equal(null, err);
@@ -36,9 +35,9 @@ client.connect(function(err, client) {
     for(var i in updateDocs) {
       var update = updateDocs[i];
       console.log(update);
-      db.spy.updateOne({_id: update.id}, [{$addFields: update.values}], {
-        upsert: true
-      }, function (err, r) {
+      db.spy.updateOne({_id: ObjectId(update.id)}, [{
+            $addFields: update.values
+          }], {upsert: false}, function (err, r) {
         client.close();
       });
     }

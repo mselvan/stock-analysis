@@ -1,8 +1,8 @@
 const FixedSizeQueue = require("../ds/fixed-size-queue");
 const {DATA_INTERVALS} = require("../config");
-const Decimal = require('mongodb').Decimal128;
-const MIN_TEXT = "_min";
-const MAX_TEXT = "_max";
+const {Decimal128} = require('mongodb');
+const LOW_TEXT = "_low";
+const HIGH_TEXT = "_high";
 
 const calculateAllMaxMin = function(data) {
     var minQueue = new FixedSizeQueue(DATA_INTERVALS.five_year);
@@ -11,15 +11,16 @@ const calculateAllMaxMin = function(data) {
     var counter = 0
     for(var entry in data) {
         var updateEntry = {};
-        updateEntry.id =  'ObjectId("' + data[entry]._id + '")';
+        // updateEntry.id =  'ObjectId("' + data[entry]._id + '")';
+        updateEntry.id =  data[entry]._id;
         updateEntry.values = {};
         minQueue.enqueue(data[entry].low);
         maxQueue.enqueue(data[entry].high);
         for(var interval in DATA_INTERVALS) {
             var movingMin = minQueue.minOfLast(DATA_INTERVALS[interval]);
             var movingMax = maxQueue.maxOfLast(DATA_INTERVALS[interval]);
-            updateEntry.values[(interval + MIN_TEXT)] = 'NumberDecimal(“'+ movingMin +'”)';
-            updateEntry.values[(interval + MAX_TEXT)] ='NumberDecimal(“'+ movingMax +'”)';
+            updateEntry.values[(interval + LOW_TEXT)] = new Decimal128(movingMin);
+            updateEntry.values[(interval + HIGH_TEXT)] = new Decimal128(movingMax);
         }
         updateSpec.push(updateEntry);
     }
