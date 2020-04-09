@@ -1,5 +1,5 @@
 module.exports = {
-    getPercentChange(from, to) {
-        return (from-to)/to;
+    getPercentChange(current, previous) {
+        return (current-previous)/previous;
     }
 }
