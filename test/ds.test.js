@@ -7,7 +7,7 @@ describe('Data Structures - Fixed Size Queue', function () {
         for(let i = 0; i < 100; i++) {
             myQueue.enqueue(i);
         }
-        it("getAll to return an array", function (done) {
+        it("getAll() to return an array", function (done) {
             expect(myQueue.getAll()).to.be.an('array');
             done();
         });
