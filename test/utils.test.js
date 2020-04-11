@@ -14,8 +14,10 @@ function itShouldTestArray(test) {
     });
 }
 
-describe('Percentage Change', function () {
-    for(test of testData) {
-        itShouldTestArray(test);
-    }
+describe('General Utils - Percentage Change', function () {
+    describe("For a set of tests", function () {
+        for(test of testData) {
+            itShouldTestArray(test);
+        }
+    });
 });
