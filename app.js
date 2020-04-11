@@ -27,13 +27,14 @@ let initialize = START_OVER;
             const csvData = await csvtojson()
                 .fromFile("./data/SPY.csv")
                 .subscribe((jsonObj) => {
-                    delete jsonObj.adjClose;
-                    jsonObj.lastTradedDate = new Date(jsonObj.lastTradedDate);
-                    jsonObj.open = Decimal128.fromString(jsonObj.open);
-                    jsonObj.high = Decimal128.fromString(jsonObj.high);
-                    jsonObj.low = Decimal128.fromString(jsonObj.low);
-                    jsonObj.close = Decimal128.fromString(jsonObj.close);
-                    jsonObj.volume = Long.fromString(jsonObj.volume);
+                    var keys = Object.keys(jsonObj);
+                    jsonObj.lastTradedDate = new Date(jsonObj.Date);
+                    jsonObj.open = Decimal128.fromString(jsonObj.Open);
+                    jsonObj.high = Decimal128.fromString(jsonObj.High);
+                    jsonObj.low = Decimal128.fromString(jsonObj.Low);
+                    jsonObj.close = Decimal128.fromString(jsonObj.Close);
+                    jsonObj.volume = Long.fromString(jsonObj.Volume);
+                    keys.forEach(key => delete jsonObj[key]);
                 });
             await db.spy.insertMany(csvData);
         }

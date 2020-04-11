@@ -1,6 +1,6 @@
 module.exports = {
     CONFIG_NAME: process.env.CONFIG_NAME || 'default-config',
-    START_OVER: false,
+    START_OVER: true,
     MONGO_URL: process.env.MONGO_URL || "mongodb://localhost:27017/",
     DB_NAME: "stockstore",
     COLLECTION_NAME: "spy",
