@@ -1,5 +1,5 @@
 {
-  "START_OVER": true,
+  "START_OVER": false,
   "MONGO_URL": "mongodb://localhost:27017/",
   "DB_NAME": "stockstore",
   "COLLECTIONS": [{
