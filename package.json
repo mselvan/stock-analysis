@@ -7,7 +7,7 @@
   },
   "scripts": {
     "start": "node app/app.js",
-    "debug" : "nodemon app/app.js" ,
+    "debug": "nodemon app/app.js",
     "test": "mocha",
     "setup": "node -e 'require(\"./app/jobs/setup-job\").initialize(true)'"
   },
