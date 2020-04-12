@@ -46,7 +46,7 @@ async function setupCollection(dbName, collection) {
 }
 
 module.exports = {
-    initialize: async function () {
+    initialize: async function (initOverride = false) {
         const client = new MongoClient(config.MONGO_URL, config.MONGO_OPTIONS);
         await client.connect();
         const db = client.db(config.DB_NAME);
@@ -58,7 +58,7 @@ module.exports = {
                 await db.createCollection(collection.name);
                 initialize = true;
             }
-            if(config.START_OVER || initialize) {
+            if(config.START_OVER || initialize || initOverride) {
                 console.log("Setting up initial data for " + collection.name);
                 await setupCollection(config.DB_NAME, collection);
             }

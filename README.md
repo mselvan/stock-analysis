@@ -4,3 +4,5 @@
 - To get started, run `yarn install`
 - Run `yarn start` to get all the data setup
 - Run `yarn test` to run tests
+
+ps. If you just want to populate the database, use `yarn setup`
