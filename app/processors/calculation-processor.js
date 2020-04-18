@@ -1,31 +1,24 @@
-const FixedSizeQueue = require("../ds/fixed-size-queue");
 const config = require('../../app-config.json');
-const {getPercentChange} = require("../utils/general-utils");
+const HistoricalOhlcProcessor = require('../processors/historical-ohlc-processor');
 const LOW_TEXT = "_low";
 const HIGH_TEXT = "_high";
-const LOW_PERCENT_CHANGE_TEXT = "_low_to_close_change_percent";
-const HIGH_PERCENT_CHANGE_TEXT = "_high_to_close_change_percent";
 
 module.exports = {calculateAllMaxMin: function(data) {
-        var minQueue = new FixedSizeQueue(config.DATA_INTERVALS.five_year);
-        var maxQueue = new FixedSizeQueue(config.DATA_INTERVALS.five_year);
-        var updateSpec = [];
-        var counter = 0
-        for(var entry of data) {
-            var updateEntry = {};
-            updateEntry.id =  entry._id;
-            updateEntry.values = {};
-            minQueue.enqueue(entry.low);
-            maxQueue.enqueue(entry.high);
-            for(var interval in config.DATA_INTERVALS) {
-                var movingMin = minQueue.minOfLast(config.DATA_INTERVALS[interval]);
-                var movingMax = maxQueue.maxOfLast(config.DATA_INTERVALS[interval]);
-                updateEntry.values[(interval + LOW_TEXT)] = { $toDecimal: movingMin.toString()};
-                updateEntry.values[(interval + HIGH_TEXT)] = { $toDecimal: movingMax.toString()};
-                updateEntry.values[(interval + LOW_PERCENT_CHANGE_TEXT)] = { $toDecimal: (getPercentChange(entry.close, movingMin)).toString()};
-                updateEntry.values[(interval + HIGH_PERCENT_CHANGE_TEXT)] = { $toDecimal: (getPercentChange(entry.close, movingMax)).toString()};
-            }
-            updateSpec.push(updateEntry);
+    let ohlcProcessor = new HistoricalOhlcProcessor(config.DATA_INTERVALS);
+    let updateSpec = [];
+    let counter = 0
+    for(let entry of data) {
+        let updateEntry = {};
+        updateEntry.id =  entry._id;
+        updateEntry.values = {};
+        ohlcProcessor.addDataPoint(entry);
+        for(var interval in config.DATA_INTERVALS) {
+            let movingMin = ohlcProcessor.getMin(interval);
+            let movingMax = ohlcProcessor.getMax(interval);
+            updateEntry.values[(interval + LOW_TEXT)] = { $toDecimal: movingMin.toString()};
+            updateEntry.values[(interval + HIGH_TEXT)] = { $toDecimal: movingMax.toString()};
         }
-        return updateSpec;
-    }};
+        updateSpec.push(updateEntry);
+    }
+    return updateSpec;
+}};

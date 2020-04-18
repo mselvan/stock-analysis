@@ -26,7 +26,16 @@ async function setupCollection(dbName, collection) {
                 keys.forEach(key => delete jsonObj[key]);
             });
         await db.collection.insertMany(csvData);
-        let docs = await db.collection.find({}).sort({lastTradedDate: 1}).toArray();
+        let docs = await db.collection.aggregate([
+            {$match: {}},
+            {
+                $project: {
+                    open: {$toDouble : "$open"},
+                    high: {$toDouble : "$high"},
+                    low: {$toDouble : "$low"},
+                    close: {$toDouble : "$close"}
+                }
+            }]).sort({lastTradedDate: 1}).toArray();
         console.log("Docs fetched count: " + docs.length);
         let calculatedData = calculateAllMaxMin(docs);
         console.log("Calculated data count: " + calculatedData.length);
