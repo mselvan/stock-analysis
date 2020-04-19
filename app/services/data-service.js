@@ -8,7 +8,7 @@ const DataService = {
         const client = new MongoClient(config.MONGO_URL, config.MONGO_OPTIONS);
         await client.connect();
         const db = client.db(config.DB_NAME);
-        let response = [];
+        let response = {};
         for(const ticker of tickers) {
             db[ticker] = await db.collection(ticker.toLowerCase());
             let projection = {ticker: ticker.toUpperCase()};
@@ -41,7 +41,7 @@ const DataService = {
                     $project: projection
                 }
             ]).toArray();
-            response.push(...result);
+            response[ticker] = result;
         }
         return response;
     }
