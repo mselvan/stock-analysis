@@ -2,13 +2,25 @@
   "START_OVER": false,
   "MONGO_URL": "mongodb://localhost:27017/",
   "DB_NAME": "stockstore",
-  "COLLECTIONS": [{
-    "name": "spy",
-    "ticker": "SPY",
-    "csvFile" : "data/SPY.csv"
-  }],
+  "COLLECTIONS": [
+    {
+      "name": "spy",
+      "ticker": "SPY",
+      "csvFile": "data/SPY.csv"
+    },
+    {
+      "name": "msft",
+      "ticker": "MSFT",
+      "csvFile": "data/MSFT.csv"
+    }
+  ],
   "DATA_INTERVALS": {
-    "week": 5, "month": 21, "quarter": 63, "year": 252, "five_year": 1260},
+    "week": 5,
+    "month": 21,
+    "quarter": 63,
+    "year": 252,
+    "five_year": 1260
+  },
   "MONGO_OPTIONS": {
     "useUnifiedTopology": true
   }

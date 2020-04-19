@@ -71,8 +71,8 @@ module.exports = {
                 console.log("Setting up initial data for " + collection.name);
                 await setupCollection(config.DB_NAME, collection);
             }
-            // close connection
-            client.close();
         }
+        // close connection
+        client.close();
     }
 };
