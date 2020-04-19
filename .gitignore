@@ -7,3 +7,4 @@ yarn.lock
 *.iml
 .idea
 yarn-error.log
+venv
