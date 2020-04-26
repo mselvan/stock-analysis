@@ -60,7 +60,7 @@ module.exports = {
         await client.connect();
         const db = client.db(config.DB_NAME);
         const collectionNames = config.TICKERS.map(ticker => ticker.toLowerCase());
-        console.log(collectionNames);
+        console.log({"availableCollections" : collectionNames});
         const collections = await db.listCollections({name: {$in : collectionNames}}).toArray();
         const existingCollectionNames = collections.map(c => c.name);
         for(let collection of collectionNames) {

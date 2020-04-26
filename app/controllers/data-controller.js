@@ -2,7 +2,7 @@ const dataService = require("../services/data-service");
 
 const DataController = {
     plots: async (req, res, next) => {
-        let tickers = req.query.tickers;
+        let tickers = req.query.tickers.split(",")
         let startDate = req.query.startDate;
         let endDate = req.query.endDate;
         let lowHigh = req.query.lowHigh;

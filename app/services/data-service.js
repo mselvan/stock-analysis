@@ -11,7 +11,9 @@ const DataService = {
         let response = {};
         for(const ticker of tickers) {
             db[ticker] = await db.collection(ticker.toLowerCase());
-            let projection = {ticker: ticker.toUpperCase()};
+            let projection = {
+                /*ticker: ticker.toUpperCase()*/
+            };
             switch (lowHigh) {
                 case "week":
                     projection = _.defaults(projection, data_config.default_projection, data_config.week);
@@ -41,7 +43,7 @@ const DataService = {
                     $project: projection
                 }
             ]).toArray();
-            response[ticker] = result;
+            response[ticker.toUpperCase()] = result;
         }
         return response;
     }
