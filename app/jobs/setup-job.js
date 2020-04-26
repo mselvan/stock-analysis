@@ -4,17 +4,17 @@ const {ObjectId, Decimal128, Long} = require('mongodb');
 const {calculateAllMaxMin} = require("../processors/calculation-processor");
 const csvtojson = require("csvtojson");
 
-async function setupCollection(dbName, collection) {
+async function setupCollection(dbName, ticker) {
     const client = new MongoClient(config.MONGO_URL, config.MONGO_OPTIONS);
     try {
         await client.connect();
         console.log("Connected correctly to server");
         const db = client.db(dbName);
-        db.collection = await db.collection(collection.name);
+        db.collection = await db.collection(ticker.toLowerCase());
         var docCount = await db.collection.countDocuments({});
         if(docCount !== 0) await db.collection.deleteMany({});
         const csvData = await csvtojson()
-            .fromFile(collection.csvFile)
+            .fromFile("data/"+ ticker +".csv")
             .subscribe((jsonObj) => {
                 var keys = Object.keys(jsonObj);
                 jsonObj.lastTradedDate = new Date(jsonObj.Date);
@@ -59,17 +59,17 @@ module.exports = {
         const client = new MongoClient(config.MONGO_URL, config.MONGO_OPTIONS);
         await client.connect();
         const db = client.db(config.DB_NAME);
-        const collections = await db.listCollections({name: {$in : config.COLLECTIONS.map(c => c.name)}}).toArray();
+        const collections = await db.listCollections({name: {$in : config.TICKERS}}).toArray();
         const existingCollectionNames = collections.map(c => c.name);
-        for(collection of config.COLLECTIONS) {
+        for(let ticker of config.TICKERS) {
             let initialize = false;
-            if(! existingCollectionNames.includes(collection.name)) {
-                await db.createCollection(collection.name);
+            if(! existingCollectionNames.includes(ticker.toLowerCase())) {
+                await db.createCollection(ticker.toLowerCase());
                 initialize = true;
             }
             if(config.START_OVER || initialize || initOverride) {
-                console.log("Setting up initial data for " + collection.name);
-                await setupCollection(config.DB_NAME, collection);
+                console.log("Setting up initial data for " + ticker.toLowerCase());
+                await setupCollection(config.DB_NAME, ticker);
             }
         }
         // close connection

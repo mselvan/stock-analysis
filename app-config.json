@@ -2,18 +2,7 @@
   "START_OVER": false,
   "MONGO_URL": "mongodb://localhost:27017/",
   "DB_NAME": "stockstore",
-  "COLLECTIONS": [
-    {
-      "name": "spy",
-      "ticker": "SPY",
-      "csvFile": "data/SPY.csv"
-    },
-    {
-      "name": "msft",
-      "ticker": "MSFT",
-      "csvFile": "data/MSFT.csv"
-    }
-  ],
+  "TICKERS": ["^GSPC","AAPL", "AXP", "BAC", "GLD", "GOOGL", "IEP", "JPM", "LUV", "MSFT", "SPY", "WORK"],
   "DATA_INTERVALS": {
     "week": 5,
     "month": 21,
