@@ -69,14 +69,19 @@ fig.add_shape(
 fig.update_layout(
     xaxis=dict(
         range=[0, 0.14],
-        spikemode='toaxis'
+        spikemode='toaxis',
+        title="Risk"
     ),
     yaxis=dict(
         range=[0, 0.18],
-        spikemode='toaxis'
+        spikemode='toaxis',
+        title='Returns'
+
     ),
     width=1200,
-    height=700)
+    height=700,
+    plot_bgcolor="rgb(232, 232, 232)"
+)
 
 app = dash.Dash()
 app.layout = html.Div([
