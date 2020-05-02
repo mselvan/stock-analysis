@@ -11,22 +11,31 @@ colors = ["#d90074", "#592400", "#95e639", "#0d3033", "#6559b3", "#330014", "#e5
 
 data = [
     go.Scatter(
-        x=[0, 0.0779, 0.1558],
-        y=[0.04, 0.116,0.192],
-        name="SML",
-        text="SML",
+        x=[0, 0.127],
+        y=[0.02, 0.18],
+        name="CML",
+        text="CML",
         mode="lines",
         line=dict(color="Blue")
+    ),
+    go.Scatter(
+        x=ef['x'],
+        y=ef['y'],
+        name="Efficient frontier",
+        text="EF",
+        line_shape="spline",
+        mode="lines",
+        line=dict(color="Red")
     )
 ]
 
-for index, row in portfolio.iterrows():
+for index, row in s_portfolio.iterrows():
     data.append(go.Scatter(
         x=[row["SD"]],
         y=[row["Returns"]],
         mode='markers',
-        name=row["Ticker"],
-        text=[row["Ticker"]],
+        name=row["Sector"],
+        text=[row["Sector"]],
         line=dict(color=colors[index]),
         marker=dict(size=8)
     ))
@@ -35,10 +44,10 @@ fig = go.Figure(data=data)
 
 fig.add_shape(
     type="line",
-    x0=0.0779,
+    x0=0.08,
     y0=0,
-    x1=0.0779,
-    y1=0.116,
+    x1=0.08,
+    y1=0.12,
     line=dict(
         color="Gray",
         width=1,
@@ -49,10 +58,10 @@ fig.add_shape(
 fig.add_shape(
     # Line Diagonal
     type="line",
-    x0=0.0779,
-    y0=0.116,
+    x0=0.08,
+    y0=0.12,
     x1=0,
-    y1=0.116,
+    y1=0.12,
     line=dict(
         color="Gray",
         width=1,
@@ -74,7 +83,8 @@ fig.update_layout(
     ),
     width=1200,
     height=700,
-    plot_bgcolor="rgb(232, 232, 232)"
+    plot_bgcolor="rgb(232, 232, 232)",
+    legend_orientation="h"
 )
 
 app = dash.Dash()
