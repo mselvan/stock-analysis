@@ -5,26 +5,18 @@ import pandas as pd
 import plotly.graph_objects as go
 
 portfolio = pd.read_csv("data/portfolio.csv")
+s_portfolio = pd.read_csv("data/portfolio-sector-wise.csv")
 ef = pd.read_csv("data/ef.csv")
 colors = ["#d90074", "#592400", "#95e639", "#0d3033", "#6559b3", "#330014", "#e50000", "#7f5940", "#398020", "#79daf2", "#440080", "#ff0044", "#d90000", "#ff8800", "#a7cc99", "#406a80", "#ee00ff", "#f2b6c6", "#7f0000", "#7f4400", "#003307", "#80c4ff", "#912699"]
 
 data = [
     go.Scatter(
-        x=[0, 0.119],
-        y=[0.02, 0.18],
-        name="CML",
-        text="CML",
+        x=[0, 0.0779, 0.1558],
+        y=[0.04, 0.116,0.192],
+        name="SML",
+        text="SML",
         mode="lines",
         line=dict(color="Blue")
-    ),
-    go.Scatter(
-        x=ef['x'],
-        y=ef['y'],
-        name="Efficient frontier",
-        text="EF",
-        line_shape="spline",
-        mode="lines",
-        line=dict(color="Red")
     )
 ]
 
@@ -43,10 +35,10 @@ fig = go.Figure(data=data)
 
 fig.add_shape(
     type="line",
-    x0=0.0601,
+    x0=0.0779,
     y0=0,
-    x1=0.0601,
-    y1=0.0894,
+    x1=0.0779,
+    y1=0.116,
     line=dict(
         color="Gray",
         width=1,
@@ -57,10 +49,10 @@ fig.add_shape(
 fig.add_shape(
     # Line Diagonal
     type="line",
-    x0=0.0601,
-    y0=0.0894,
+    x0=0.0779,
+    y0=0.116,
     x1=0,
-    y1=0.0894,
+    y1=0.116,
     line=dict(
         color="Gray",
         width=1,
