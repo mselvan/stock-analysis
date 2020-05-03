@@ -6,21 +6,20 @@ import plotly.graph_objects as go
 
 portfolio = pd.read_csv("data/portfolio.csv")
 s_portfolio = pd.read_csv("data/portfolio-sector-wise.csv")
-ef = pd.read_csv("data/ef.csv")
 colors = ["#d90074", "#592400", "#95e639", "#0d3033", "#6559b3", "#330014", "#e50000", "#7f5940", "#398020", "#79daf2", "#440080", "#ff0044", "#d90000", "#ff8800", "#a7cc99", "#406a80", "#ee00ff", "#f2b6c6", "#7f0000", "#7f4400", "#003307", "#80c4ff", "#912699"]
 
 data = [
     go.Scatter(
-        x=[0, 0.127],
-        y=[0.02, 0.18],
+        x=[0, 0.125],
+        y=[0, 0.192],
         name="CML",
         text="CML",
         mode="lines",
         line=dict(color="Blue")
     ),
     go.Scatter(
-        x=ef['x'],
-        y=ef['y'],
+        x=[0.09, 0.06, 0.07],
+        y=[0.135, 0.0825, 0.06],
         name="Efficient frontier",
         text="EF",
         line_shape="spline",
