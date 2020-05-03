@@ -68,16 +68,16 @@ fig.add_shape(
 )
 
 fig.update_layout(
+    title="Portfolio Stocks - Risk vs Returns - with EF & CML (Sector level)",
+    xaxis_title="Risk (SD)",
+    yaxis_title="Returns (CAPM)",
     xaxis=dict(
         range=[0, 0.14],
-        spikemode='toaxis',
-        title="Risk"
+        spikemode='toaxis'
     ),
     yaxis=dict(
         range=[0, 0.18],
-        spikemode='toaxis',
-        title='Returns'
-
+        spikemode='toaxis'
     ),
     width=1200,
     height=700,

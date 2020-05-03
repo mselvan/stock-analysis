@@ -10,31 +10,22 @@ colors = ["#d90074", "#592400", "#95e639", "#0d3033", "#6559b3", "#330014", "#e5
 
 data = [
     go.Scatter(
-        x=[0, 0.125],
-        y=[0, 0.192],
-        name="CML",
-        text="CML",
+        x=[0, 0.155800],
+        y=[0.04, 0.192000],
+        name="SML",
+        text="SML",
         mode="lines",
         line=dict(color="Blue")
-    ),
-    go.Scatter(
-        x=[0.09, 0.06, 0.07],
-        y=[0.135, 0.0825, 0.06],
-        name="Efficient frontier",
-        text="EF",
-        line_shape="spline",
-        mode="lines",
-        line=dict(color="Red")
     )
 ]
 
-for index, row in s_portfolio.iterrows():
+for index, row in portfolio.iterrows():
     data.append(go.Scatter(
         x=[row["SD"]],
         y=[row["Returns"]],
         mode='markers',
-        name=row["Sector"],
-        text=[row["Sector"]],
+        name=row["Ticker"],
+        text=[row["Ticker"]],
         line=dict(color=colors[index]),
         marker=dict(size=8)
     ))
@@ -43,10 +34,10 @@ fig = go.Figure(data=data)
 
 fig.add_shape(
     type="line",
-    x0=0.08,
+    x0=0.07790,
     y0=0,
-    x1=0.08,
-    y1=0.12,
+    x1=0.07790,
+    y1=0.11600,
     line=dict(
         color="Gray",
         width=1,
@@ -55,12 +46,11 @@ fig.add_shape(
 )
 
 fig.add_shape(
-    # Line Diagonal
     type="line",
-    x0=0.08,
-    y0=0.12,
+    x0=0.07790,
+    y0=0.11600,
     x1=0,
-    y1=0.12,
+    y1=0.11600,
     line=dict(
         color="Gray",
         width=1,
@@ -69,15 +59,16 @@ fig.add_shape(
 )
 
 fig.update_layout(
+    title="Portfolio Stocks - Risk vs Returns (With SML Reference)",
+    xaxis_title="Risk (SD)",
+    yaxis_title="Returns (CAPM)",
     xaxis=dict(
         range=[0, 0.14],
-        spikemode='toaxis',
-        title="Risk"
+        spikemode='toaxis'
     ),
     yaxis=dict(
         range=[0, 0.18],
-        spikemode='toaxis',
-        title='Returns'
+        spikemode='toaxis'
 
     ),
     width=1200,
